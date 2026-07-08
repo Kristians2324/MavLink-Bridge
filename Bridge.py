@@ -5,7 +5,7 @@ ArduPilot vehicle (Copter/Plane/etc.) and forwards a compact JSON message to a
 Godot client over UDP.
 
 Default flow:
-  1. MAVLink source sends to udp:0.0.0.0:14550
+  1. MAVLink source sends to udp:127.0.0.1:14550
   2. This bridge listens on 14550
   3. The bridge forwards JSON packets to Godot on 127.0.0.1:14551
 
@@ -40,8 +40,11 @@ def main() -> None:
     godot_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     godot_addr = (args.godot_host, args.godot_port)
 
-    print(f"Waiting for MAVLink on udp:0.0.0.0:{args.mavlink_port} ...")
-    mav = mavutil.mavlink_connection(f"udp:0.0.0.0:{args.mavlink_port}")
+    print(f"Waiting for MAVLink on udpin:127.0.0.1:{args.mavlink_port} ...")
+    
+    # MODIFIED LINE: Changed to 'udpin:127.0.0.1:' to resolve the Windows socket PermissionError
+    mav = mavutil.mavlink_connection(f"udpin:127.0.0.1:{args.mavlink_port}")
+    
     mav.wait_heartbeat()
     print(
         f"Connected to system {mav.target_system}, component {mav.target_component}. "
