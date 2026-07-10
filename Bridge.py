@@ -148,6 +148,8 @@ def main() -> None:
                 print(f"Control socket error: {exc}")
                 break
 
+            print(f"Raw control packet from Godot: {data!r}")
+
             control = parse_control_packet(data)
             if not control:
                 continue
